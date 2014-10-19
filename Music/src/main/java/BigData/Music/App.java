@@ -1,6 +1,9 @@
 package BigData.Music;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 import ncsa.hdf.hdf5lib.HDF5Constants;
 import ncsa.hdf.object.h5.H5File;
@@ -11,12 +14,35 @@ import ncsa.hdf.object.h5.H5File;
  */
 public class App {
 	private static H5Handler h5h;
-	private static int cntFiles = 0;
 
 	public static void main(String[] args) {
-		System.out.println("Hello World!");
+		
 		h5h = H5Handler.getInstance();
-		readFromH5("Johnny Cash", "I Got Stripes (Live)");
+		
+		boolean loop = true;
+		String artist ="";
+		String song = "";
+		
+		while(loop){
+			InputStreamReader sr =new InputStreamReader(System.in);
+			BufferedReader br=new BufferedReader(sr);
+			try {
+				 System.out.println("Input an artist");
+				 artist = br.readLine();
+				 artist = artist.replaceAll("[\\r\\n]", ""); 
+				 System.out.println("Input a song title");
+				 song = br.readLine();
+				 song = song.replaceAll("[\\r\\n]", ""); 
+				 
+				 System.out.println(artist + " - " + song);
+				 readFromH5(artist, song);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			
+			
+		}
 	}
 
 	public static void readFromH5(String artist, String track_name) {
@@ -27,8 +53,6 @@ public class App {
 				.listFiles();
 		File foundFile = getFile(files, fileNameFromTrack);
 
-		System.out.println("nb files scanned : " + cntFiles);
-		// H5File file2 = new H5File2(foundFile.)
 		if (foundFile != null)
 			System.out.println(foundFile.getAbsolutePath());
 		else
@@ -71,15 +95,12 @@ public class App {
 	private static File getFile(File[] files, String wantedFile) {
 		File foundFile = null;
 		for (File file : files) {
-			cntFiles++;
 			if (foundFile != null)
 				break;
 			if (file.isDirectory()) {
 				foundFile = getFile(file.listFiles(), wantedFile);
 				if (foundFile != null)
 					System.out.println("foundfile = " + foundFile.getName());
-				else
-					System.out.println("foundFile is null");
 			} else if (file.getName().equals(wantedFile + ".h5")) {
 				System.out
 						.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOUND <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
