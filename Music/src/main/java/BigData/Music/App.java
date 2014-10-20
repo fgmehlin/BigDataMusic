@@ -17,11 +17,14 @@ public class App {
 
 	public static void main(String[] args) {
 		
+		//Instance of the singleton H5Handler
 		h5h = H5Handler.getInstance();
 		
 		boolean loop = true;
 		String artist ="";
 		String song = "";
+		
+		// Console loop
 		
 		while(loop){
 			InputStreamReader sr =new InputStreamReader(System.in);
