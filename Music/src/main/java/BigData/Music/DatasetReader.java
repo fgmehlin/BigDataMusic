@@ -1,55 +1,22 @@
 package BigData.Music;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 import ncsa.hdf.hdf5lib.HDF5Constants;
 import ncsa.hdf.object.h5.H5File;
 
-public class App {
+public class DatasetReader {
 	
-	private static final String MSD_DATASET = "/Volumes/Data/ETHZ/Big Data/MillionSongSubset/data";
 	
-	private static DatabaseHandler h5h;
-
-	public static void main(String[] args) {
-		
-		//Instance of the singleton H5Handler
-		h5h = DatabaseHandler.getInstance();
-		
-		boolean loop = true;
-		String artist ="";
-		String song = "";
-		
-		// Console loop
-		
-		while(loop){
-			InputStreamReader sr =new InputStreamReader(System.in);
-			BufferedReader br=new BufferedReader(sr);
-			try {
-				 System.out.println("Input an artist");
-				 artist = br.readLine();
-				 artist = artist.replaceAll("[\\r\\n]", ""); 
-				 System.out.println("Input a song title");
-				 song = br.readLine();
-				 song = song.replaceAll("[\\r\\n]", ""); 
-				 
-				 System.out.println(artist + " - " + song);
-				 readFromH5(artist, song);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			
-			
-		}
+	private DatabaseHandler dbh;
+	
+	DatasetReader(){
+		dbh = DatabaseHandler.getInstance();
 	}
 
-	public static void readFromH5(String artist, String track_name) {
+	public void readFromH5(String artist, String track_name) {
 
-		String fileNameFromTrack = h5h.queryTrackFile(artist, track_name, MSD_DATASET);
+		String fileNameFromTrack = dbh.queryTrackFile(artist, track_name);
 		File[] files = new File(
 				"/Volumes/Data/ETHZ/Big Data/MillionSongSubset/data/")
 				.listFiles();
@@ -93,6 +60,7 @@ public class App {
 			e.printStackTrace();
 		}
 	}
+	
 	private static File getFile(File[] files, String wantedFile) {
 		File foundFile = null;
 		for (File file : files) {
@@ -112,6 +80,6 @@ public class App {
 		}
 		return foundFile;
 	}
-
-
+	
+	
 }
